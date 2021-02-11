@@ -92,155 +92,208 @@ new_data_sets <- function(.file_path,  .var, .original){
     group_by(Gemeinde)
 }
 
-# inhabitants 2019 for the 2212 municipalities in the year 2019
-df_bev_v19 <- new_data_sets("raw-data/Staendige_Wohnbevoelkerung_2019.xlsx", stae_wb_2019,  "Anzahl Einwohner/innen am Jahresende") %>% 
+# inhabitants 2019 for the 2212 municipalities in the year 2019 ----
+df_bev_19_old <- new_data_sets("raw-data/Staendige_Wohnbevoelkerung_2019.xlsx", stae_wb_2019,  "Anzahl Einwohner/innen am Jahresende") %>% 
   rename("Einwohner" = "Anzahl")
 
-# inhabitants 2019 for the 2202 municipalities in the year 2020 (summed for the merged municipalities)
-df_bev <- new_data_sets("raw-data/Staendige_Wohnbevoelkerung_2019.xlsx", stae_wb_2019,  "Anzahl Einwohner/innen am Jahresende") %>% 
+# inhabitants 2019 for the 2202 municipalities in the year 2020 (summed for the merged municipalities) ----
+df_bev_19 <- new_data_sets("raw-data/Staendige_Wohnbevoelkerung_2019.xlsx", stae_wb_2019,  "Anzahl Einwohner/innen am Jahresende") %>% 
   summarise(stae_wb_2019 = sum(Anzahl)) 
 
-# changing of inhabitants from 2010 till 2019
-df_ent_bev <- new_data_sets("raw-data/entwicklung_wohnbevoelkerung_10_19.xlsx", ent_wb_2019,  "Veränderung der ständigen Wohnbevölkerung, in %") %>% 
-  left_join(df_bev_v19) %>% 
-  summarise(ent_wb_p_2019 = sum(Einwohner/sum(Einwohner)*Anzahl)) #weighting merged municipalities by their inhabitants
+# changing of inhabitants from 2010 till 2019 ----
+df_ent_bev_1019 <- new_data_sets("raw-data/entwicklung_wohnbevoelkerung_10_19.xlsx", ent_wb_2019,  "Veränderung der ständigen Wohnbevölkerung, in %") %>% 
+  left_join(df_bev_19_old) %>% 
+  summarise(ent_wb_2010_2019 = sum(Einwohner/sum(Einwohner)*Anzahl)) #weighting merged municipalities by their inhabitants
 
-# amount of foreigner, will than be used to calculate foreigner ratio
-df_aus <- new_data_sets("raw-data/anteil_auslaend_19.xlsx", aus_2019,  "Anzahl Ausländer/innen") %>% 
+# amount of foreigner, will than be used to calculate foreigner ratio ----
+df_aus_19 <- new_data_sets("raw-data/anteil_auslaend_19.xlsx", aus_2019,  "Anzahl Ausländer/innen") %>% 
   summarise(aus_2019 = sum(Anzahl))
 
-# inhabitants of a certain age boundary 
-df_u20 <- new_data_sets("raw-data/wohnbev_unter20_19.xlsx", ein_u20_2019,  "Anzahl der Personen im Alter von 0 bis 19 Jahren") %>% 
-  summarise(ein = sum(Anzahl))
+# inhabitants of a certain age boundary ----
+df_u20_19 <- new_data_sets("raw-data/wohnbev_unter20_19.xlsx", ein_u20_2019,  "Anzahl der Personen im Alter von 0 bis 19 Jahren") %>% 
+  summarise(ein_u20_2019 = sum(Anzahl))
 
-df_2039 <- new_data_sets("raw-data/wohnbev_20bis39_19.xlsx", ein_2039_2019,  "Anzahl der Personen im Alter von 20 bis 39 Jahren") %>% 
+df_2039_19 <- new_data_sets("raw-data/wohnbev_20bis39_19.xlsx", ein_2039_2019,  "Anzahl der Personen im Alter von 20 bis 39 Jahren") %>% 
   summarise(ein_2039_2019 = sum(Anzahl))
 
-df_4064 <- new_data_sets("raw-data/wohnbev_40bis64_19.xlsx", ein_4064_2019,  "Anzahl der Personen im Alter von 40 bis 64 Jahren") %>% 
+df_4064_19 <- new_data_sets("raw-data/wohnbev_40bis64_19.xlsx", ein_4064_2019,  "Anzahl der Personen im Alter von 40 bis 64 Jahren") %>% 
   summarise(ein_4064_2019 = sum(Anzahl))
 
-df_ab65 <- new_data_sets("raw-data/wohnbev_ab65_19.xlsx", ein_ab65_2019,  "Anzahl der Personen im Alter von 65 und mehr Jahren") %>% 
+df_ab65_19 <- new_data_sets("raw-data/wohnbev_ab65_19.xlsx", ein_ab65_2019,  "Anzahl der Personen im Alter von 65 und mehr Jahren") %>% 
   summarise(ein_ab65_2019 = sum(Anzahl))
 
-# marriages
-df_hei <- new_data_sets("raw-data/heiraten_19.xlsx", hei_2019,  "Anzahl Heiraten") %>% 
+# marriages ----
+df_hei_19 <- new_data_sets("raw-data/heiraten_19.xlsx", hei_2019,  "Anzahl Heiraten") %>% 
   summarise(hei_2019 = sum(Anzahl))
 
-# births
-df_geb <- new_data_sets("raw-data/geburten_19.xlsx", geb_2019,  "Anzahl Lebendgeborene") %>% 
+# divorces ----
+df_scheid_19 <- new_data_sets("raw-data/scheidung_19.xlsx", scheid_2019,  "Anzahl Scheidungen") %>% 
+  summarise(scheid_2019 = sum(Anzahl))
+
+# births ----
+df_geb_19 <- new_data_sets("raw-data/geburten_19.xlsx", geb_2019,  "Anzahl Lebendgeborene") %>% 
   summarise(geb_2019 = sum(Anzahl))
 
-# deaths
-df_tod <- new_data_sets("raw-data/todesfaelle_19.xlsx", tod_2019,  "Anzahl Todesfälle") %>% 
+# deaths ----
+df_tod_19 <- new_data_sets("raw-data/todesfaelle_19.xlsx", tod_2019,  "Anzahl Todesfälle") %>% 
   summarise(tod_2019 = sum(Anzahl))
 
-# empty flats
-df_lw <- new_data_sets("raw-data/leerwohnung_20.xlsx", lw_2020,  "Anteil leer stehender Wohnungen am Gesamtwohnungsbestand, in %") %>% 
+# empty flats ----
+df_lw_20 <- new_data_sets("raw-data/leerwohnung_20.xlsx", lw_2020,  "Anteil leer stehender Wohnungen am Gesamtwohnungsbestand, in %") %>% 
   summarise(anteil_lw_2020 = sum(Anzahl))
 
-#social welfare
+#social welfare ----
 df_sozhi_19<- new_data_sets("raw-data/sozialhilfe_19.xlsx", sozhi_19,  "Unterstützte Personen") %>% 
-  summarise(sozhi_2020 = sum(Anzahl))
+  summarise(sozhi_2019 = sum(Anzahl))
 
-#average income per capita
-df_avin_17<- new_data_sets("raw-data/mean_reineinkommen_17.xlsx", avin_17,  "Reineinkommen pro Einwohner/-in, in Franken") %>% 
-  summarise(avin_17 = sum(Anzahl))
-
-
-# employees
-df_em1_18<- new_data_sets("raw-data/beschaeft_1sektor_18.xlsx", em1_18,  "Zahl der Beschäftigten im 1. Wirtschaftssektor") %>% 
-  summarise(em1_18 = sum(Anzahl))
-
-df_em2_18<- new_data_sets("raw-data/beschaeft_2sektor_18.xlsx", em2_18,  "Zahl der Beschäftigten im 2. Wirtschaftssektor") %>% 
-  summarise(em2_18 = sum(Anzahl))
-
-df_em3_18<- new_data_sets("raw-data/beschaeft_3sektor_18.xlsx", em3_18,  "Zahl der Beschäftigten im 3. Wirtschaftssektor") %>% 
-  summarise(em3_18 = sum(Anzahl))
-
-# workplaces
-df_wp1_18<- new_data_sets("raw-data/arbeitsst_1sektor_18.xlsx", wp1_18,  "Zahl der Arbeitsstätten im 1. Wirtschaftssektor") %>% 
-  summarise(wp1_18 = sum(Anzahl))
-
-df_wp2_18<- new_data_sets("raw-data/arbeitsst_2sektor_18.xlsx", wp2_18,  "Zahl der Arbeitsstätten im 2. Wirtschaftssektor") %>% 
-  summarise(wp2_18 = sum(Anzahl))
-
-df_wp3_18<- new_data_sets("raw-data/arbeitsst_3sektor_18.xlsx", wp3_18,  "Zahl der Arbeitsstätten im 3. Wirtschaftssektor") %>% 
-  summarise(wp3_18 = sum(Anzahl))
+#average income per capita ----
+df_dre_17<- new_data_sets("raw-data/mean_reineinkommen_17.xlsx", dre_17,  "Reineinkommen pro Einwohner/-in, in Franken") %>% 
+  summarise(dre_17 = sum(Anzahl))
 
 
+# employees ----
+df_bes1_18<- new_data_sets("raw-data/beschaeft_1sektor_18.xlsx", bes1_18,  "Zahl der Beschäftigten im 1. Wirtschaftssektor") %>% 
+  summarise(bes1_18 = sum(Anzahl))
+
+df_bes2_18<- new_data_sets("raw-data/beschaeft_2sektor_18.xlsx", bes2_18,  "Zahl der Beschäftigten im 2. Wirtschaftssektor") %>% 
+  summarise(bes2_18 = sum(Anzahl))
+
+df_bes3_18<- new_data_sets("raw-data/beschaeft_3sektor_18.xlsx", bes3_18,  "Zahl der Beschäftigten im 3. Wirtschaftssektor") %>% 
+  summarise(bes3_18 = sum(Anzahl))
+
+# workplaces ----
+df_ast1_18<- new_data_sets("raw-data/arbeitsst_1sektor_18.xlsx", ast1_18,  "Zahl der Arbeitsstätten im 1. Wirtschaftssektor") %>% 
+  summarise(ast1_18 = sum(Anzahl))
+
+df_ast2_18<- new_data_sets("raw-data/arbeitsst_2sektor_18.xlsx", ast2_18,  "Zahl der Arbeitsstätten im 2. Wirtschaftssektor") %>% 
+  summarise(ast2_18 = sum(Anzahl))
+
+df_ast3_18<- new_data_sets("raw-data/arbeitsst_3sektor_18.xlsx", ast3_18,  "Zahl der Arbeitsstätten im 3. Wirtschaftssektor") %>% 
+  summarise(ast3_18 = sum(Anzahl))
+
+# # construction zones --- data is from 2017 and has 2255 municipalities so a lot of merger has to be done... maybe later
+# # data from https://www.are.admin.ch/are/de/home/raumentwicklung-und-raumplanung/grundlagen-und-daten/bauzonenstatistik-schweiz.html
+# df_bz_17 <- readxl::read_xlsx("raw-data/Bauzonenstatistik_17.xlsx", sheet = "Statistik Hauptnutzung")
+# 
+# 
+
+
+# Tax data from 2020 ----  at the moment to complex to compare because of the different rates for singels and families and incomes levels
+# # https://swisstaxcalculator.estv.admin.ch/#/home
+# 
+# # using tidyxl and upivotr to read in formated excel files
+# # youtube tutorial https://www.youtube.com/watch?v=1sinC7wsS5U
+# # tutorial https://nacnudus.github.io/spreadsheet-munging-strategies/tidy-clean.html
+# steuern_xlsx <- function(.file_path){
+#   xlsx_cells(.file_path, sheet = "Export") %>% 
+#   filter(!is_blank) %>% 
+#   filter(row>2) %>% 
+#   filter(col>2) %>% 
+#   behead("NNW", Steuerart) %>%
+#   behead("up", Steuerinstanz) %>% 
+#   behead("left", BfS_id) %>% 
+#   behead("left", Gemeinde) %>% 
+#   rename("Steuersatz" = "numeric") %>% 
+#   select(BfS_id, Gemeinde, Steuerart, Steuerinstanz, Steuersatz) %>% 
+#   pivot_wider(names_from = c(Steuerart, Steuerinstanz), values_from = Steuersatz)
+# }
+# 
+# # create dataframe for path (the datasets have the same name but with numbers, expect the first one which had no number)
+# df_path <- data.frame(n = 1:25, path_1="raw-data/estv_income_rates(", path_2=").xlsx")
+# df_path$path <-  paste0(df_path$path_1, df_path$n, df_path$path_2, sep="") 
+# df_path[26,] <- c(26, "-", "-", "raw-data/estv_income_rates.xlsx")
+# 
+# list_steuern <- purrr::map(df_path$path, steuern_xlsx)
+# 
+# #function for merging elements of list (from https://www.r-bloggers.com/2016/07/merge-a-list-of-datasets-together/)
+# multi_join <- function(list_of_loaded_data, join_func, ...){
+#   require("dplyr")
+#   output <- Reduce(function(x, y) {join_func(x, y, ...)}, list_of_loaded_data)
+#   return(output)
+# }
+# 
+# df_steu <- multi_join(list_steuern, full_join)
+# 
+# df_steu <-  df_steu %>% 
+#   filter(!Gemeinde %in% c("Schinznach-Bad", # Schinznach Bad is now in Brugg keeping only Brugg
+#                           "Kirchenthurnen", "Lohnstorf", #Kirchenthurenen, Lohnstorf and Mühlenthurnen are Thurnen
+#                           "Schwendibach",
+#                            "Wolfisberg")) %>%  
+#   mutate(Gemeinde = recode(Gemeinde, "Mühlethurnen" = "Thurnen")) 
+# # there is no data for the municipality "Prez" which is the result of a merge of the three munciipalities Prez-vers-Noréaz, Noréaz and Corserey
+# # I will use the tax data from 2019 from this three muncipalities and use the average
+# steuern_prez <- steuern_xlsx("raw-data/estv_income_rates_fr_19.xlsx") %>% 
+#   filter(Gemeinde %in% c("Prez-vers-Noréaz", "Noréaz", "Corserey")) %>% 
+#   summarise_at(vars(-Gemeinde), mean) %>% 
+#   mutate(across(where(is.numeric), round, 0)) %>% 
+#   mutate(Gemeinde = "Prez") %>% 
+#   mutate(BfS_id = 2273) 
+#   
+# df_steu_all <- rbind(df_steu, steuern_prez) %>% 
+#   rename_all(paste0, "_steu_2020") %>% 
+#   rename("BfS_id" = "BfS_id_steu_2020") %>% 
+#   mutate(BfS_id = as.character(BfS_id))
 
 
 
-#add df_bev to df_port and remove Einwohner 2018
-df_port_3 <- df_port_2 %>% 
-  left_join(df_bev) %>% 
-  select(-c(Einwohner_2018))
+# add new data to portrait ----
+df_port_new <-  df_port %>% 
+  left_join(df_bev_19) %>% 
+  left_join(df_ent_bev_1019) %>% 
+  left_join(df_aus_19) %>% 
+  left_join(df_u20_19) %>% 
+  left_join(df_2039_19) %>% 
+  left_join(df_4064_19) %>% 
+  left_join(df_ab65_19) %>% 
+  left_join(df_geb_19) %>% 
+  left_join(df_hei_19)  %>% 
+  left_join(df_scheid_19) %>% 
+  left_join(df_tod_19)  %>% 
+  left_join(df_lw_20) %>% 
+  left_join(df_sozhi_19) %>% 
+  left_join(df_dre_17) %>% 
+  left_join(df_bes1_18) %>% 
+  left_join(df_bes2_18) %>% 
+  left_join(df_bes3_18) %>% 
+  left_join(df_ast1_18) %>% 
+  left_join(df_ast2_18) %>% 
+  left_join(df_ast3_18) %>%
+  left_join(df_steu_all) 
 
-# Tax data from 2020 ----
-# https://swisstaxcalculator.estv.admin.ch/#/home
+# calculate some relative values ----
+df_port_new <- df_port_new %>% 
+  mutate(bev_dichte_2019 = stae_wb_2019/`Gesamtfläche in km²_2004/09`) %>% 
+  mutate(ant_aus_2019 = aus_2019/stae_wb_2019*100) %>% 
+  mutate(ant_u20_2019 = ein_u20_2019/stae_wb_2019*100)  %>% 
+  mutate(ant_20bis39_2019 = ein_2039_2019/stae_wb_2019*100) %>% 
+  mutate(ant_40bis64_2019 = ein_4064_2019/stae_wb_2019*100) %>% 
+  mutate(ant_ab65_2019 = ein_ab65_2019/stae_wb_2019*100) %>% 
+  mutate(prok_geb_2019 = geb_2019/stae_wb_2019*1000) %>% 
+  mutate(prok_hei_2019 = hei_2019/stae_wb_2019*1000) %>% 
+  mutate(prok_scheid_2019 = scheid_2019/stae_wb_2019*1000) %>% 
+  mutate(prok_tod_2019 = tod_2019/stae_wb_2019*1000) %>% 
+  mutate(ant_sozhi_2019 = sozhi_2019/stae_wb_2019*100) %>% 
+  mutate(ant_bes1_2018 = bes1_18/(bes1_18+bes2_18+bes3_18)) %>% 
+  mutate(ant_bes2_2018 = bes1_18/(bes2_18+bes2_18+bes3_18)) %>% 
+  mutate(ant_bes3_2018 = bes1_18/(bes3_18+bes2_18+bes3_18)) %>% 
+  mutate(ant_ast1_2018 = ast1_18/(ast1_18+ast2_18+ast3_18)) %>% 
+  mutate(ant_ast1_2018 = ast1_18/(ast1_18+ast2_18+ast3_18)) %>% 
+  mutate(ant_ast1_2018 = ast1_18/(ast1_18+ast2_18+ast3_18))  
 
-# using tidyxl and upivotr to read in formated excel files
-# youtube tutorial https://www.youtube.com/watch?v=1sinC7wsS5U
-# tutorial https://nacnudus.github.io/spreadsheet-munging-strategies/tidy-clean.html
-steuern_xlsx <- function(.file_path){
-  xlsx_cells(.file_path, sheet = "Export") %>% 
-  filter(!is_blank) %>% 
-  filter(row>2) %>% 
-  filter(col>2) %>% 
-  behead("NNW", Steuerart) %>%
-  behead("up", Steuerinstanz) %>% 
-  behead("left", BfS_id) %>% 
-  behead("left", Gemeinde) %>% 
-  rename("Steuersatz" = "numeric") %>% 
-  select(BfS_id, Gemeinde, Steuerart, Steuerinstanz, Steuersatz) %>% 
-  pivot_wider(names_from = c(Steuerart, Steuerinstanz), values_from = Steuersatz)
-}
-
-# create dataframe for path (the datasets have the same name but with numbers, expect the first one which had no number)
-df_path <- data.frame(n = 1:25, path_1="raw-data/estv_income_rates(", path_2=").xlsx")
-df_path$path <-  paste0(df_path$path_1, df_path$n, df_path$path_2, sep="") 
-df_path[26,] <- c(26, "-", "-", "raw-data/estv_income_rates.xlsx")
-
-list_steuern <- purrr::map(df_path$path, steuern_xlsx)
-
-#function for merging elements of list (from https://www.r-bloggers.com/2016/07/merge-a-list-of-datasets-together/)
-multi_join <- function(list_of_loaded_data, join_func, ...){
-  require("dplyr")
-  output <- Reduce(function(x, y) {join_func(x, y, ...)}, list_of_loaded_data)
-  return(output)
-}
-
-df_steu <- multi_join(list_steuern, full_join)
-
-df_steu <-  df_steu %>% 
-  filter(!Gemeinde %in% c("Schinznach-Bad", # Schinznach Bad is now in Brugg keeping only Brugg
-                          "Kirchenthurnen", "Lohnstorf", #Kirchenthurenen, Lohnstorf and Mühlenthurnen are Thurnen
-                          "Schwendibach",
-                           "Wolfisberg")) %>%  
-  mutate(Gemeinde = recode(Gemeinde, "Mühlethurnen" = "Thurnen")) 
-# there is no data for the municipality "Prez" which is the result of a merge of the three munciipalities Prez-vers-Noréaz, Noréaz and Corserey
-# I will use the tax data from 2019 from this three muncipalities and use the average
-steuern_prez <- steuern_xlsx("raw-data/estv_income_rates_fr_19.xlsx") %>% 
-  filter(Gemeinde %in% c("Prez-vers-Noréaz", "Noréaz", "Corserey")) %>% 
-  summarise_at(vars(-Gemeinde), mean) %>% 
-  mutate(across(where(is.numeric), round, 0)) %>% 
-  mutate(Gemeinde = "Prez") %>% 
-  mutate(BfS_id = 2273) 
+#select only needed values
+df_port_new  <- df_port_new %>% 
+  select(c(BfS_id, Gemeinde, stae_wb_2019, ent_wb_2010_2019, bev_dichte_2019, 
+            `Gesamtfläche in km²_2004/09`, `Siedlungsfläche in %_2004/09`, `Landwirtschafts-fläche in %_2004/09`, `Wald und Gehölze in %_2004/09`, `Unproduktive Fläche in %_2004/09`,
+            anteil_lw_2020, `Neu gebaute Wohnungen pro 1000 Einwohner_2017`, `Durchschnittliche Haushaltsgrösse in Personen_2018`,
+            ant_aus_2019, ant_sozhi_2019, ant_u20_2019, ant_20bis39_2019, ant_40bis64_2019, ant_ab65_2019, 
+            prok_geb_2019, prok_hei_2019, prok_scheid_2019, prok_tod_2019, 
+            dre_17, bes1_18, bes2_18, bes3_18, ast1_18, ast2_18, ast3_18, 
+            `FDP 4)_2019`, CVP_2019, SP_2019, GPS_2019, GLP_2019, `EVP/CSP_2019`, BDP_2019, `PdA/Sol._2019`, SVP_2019, `Kleine Rechtsparteien_2019`)) %>% 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>% 
+  rename(c("gf_km2_2004_09" = `Gesamtfläche in km²_2004/09`, "ant_sf_0409" = `Siedlungsfläche in %_2004/09`, "ant_lf_0409" = `Landwirtschafts-fläche in %_2004/09`, "ant_wg_0409" =`Wald und Gehölze in %_2004/09`, "ant_ipf_0409" = `Unproduktive Fläche in %_2004/09`)) %>% 
+  rename(c("prok_ngw_2017" = `Neu gebaute Wohnungen pro 1000 Einwohner_2017`, "dhhg_2018" = `Durchschnittliche Haushaltsgrösse in Personen_2018` )) %>% 
+  rename(c("FDP_2019`" = `FDP 4)_2019`),  "EVP_CSP_2019" = `EVP/CSP_2019`, "PdA_Sol_2019" = `PdA/Sol._2019`, "weitere_Rechtsparteien_2019" = `Kleine Rechtsparteien_2019` )
   
-df_steu_all <- rbind(df_steu, steuern_prez) %>% 
-  rename_all(paste0, "_2020") %>% 
-  rename("BfS_id" = "BfS_id_2020") %>% 
-  mutate(BfS_id = as.character(BfS_id))
-
-# save
-write.csv(df_steu_all, "processed-data/steuersaetze_2020_ch_gemeinden.csv")
-
-
-#add tax data to portrait df
-df_port_3 <- df_port_2 %>% left_join(df_steu_all) 
-  
-
-
 
 
 
