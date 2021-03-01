@@ -9,7 +9,7 @@ library(shinydashboard)
 
 
 # read in data ----
-
+  
 
 #* Data for municipalities ----
 df_gv <- read_csv2("processed-data/Gemeindeportrae_ch_2020_update.csv", locale = locale(encoding = "ISO-8859-1")) 
@@ -131,7 +131,7 @@ ui <- dashboardPage(skin = "red",
                                         
                                         # Kantonauswahl
                                         checkboxGroupInput(inputId = "kantone", label = "Mit Gemeinden folgender Kantone vergeleichen:", df_gv$Kanton, inline = T),
-                                        actionButton("un_selectall_kantone","Un/Select All"),  # action Links to select and unselect all (reactiv function in server, idea from https://stackoverflow.com/questions/28829682/r-shiny-checkboxgroupinput-select-all-checkboxes-by-click)
+                                        actionButton("un_selectall_kantone","Alle ab-/auswählen"),  # action Links to select and unselect all (reactiv function in server, idea from https://stackoverflow.com/questions/28829682/r-shiny-checkboxgroupinput-select-all-checkboxes-by-click)
                                         
                                         tags$h3("Bevölkerung"),
                                         fluidRow(
@@ -439,12 +439,10 @@ server <- function(input, output, session) {
      # select name and number of municipalities for later  
      namen_nummer <- df_gv %>% 
        filter(Gemeinde != input$gemeinde) %>% 
-       filter (Kanton %in% input$kantone) %>% 
        select(c("Gemeinde", "BfS_id", "Kanton"))  
      
      # calculate ranks over all municipalities
      df_gv_rank <- df_gv  %>%
-       filter (Kanton %in% input$kantone) %>% 
        mutate_if(is.numeric, ~(-rank(.,  ties.method = c("min"))))
      
      # choose selected municipality, and unselect municipality name, bfs id and canton
@@ -498,7 +496,9 @@ server <- function(input, output, session) {
        
      
      df_weighted_distance_names <- cbind(namen_nummer, df_weighted_rank_dist)%>% 
-       arrange(by = gewichtete_absolute_Rangdifferenz)
+       arrange(by = gewichtete_absolute_Rangdifferenz) %>% 
+       filter (Kanton %in% input$kantone)
+       
      
      
    }) 
