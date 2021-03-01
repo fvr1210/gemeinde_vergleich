@@ -250,7 +250,9 @@ ui <- dashboardPage(skin = "red",
                                             column(2, sliderInput(inputId="k_r_P_2019_g", label = 'Gewichtung Wähleranteil kleine rechte Parteien (2019):',
                                                                   min=0, max=10, value=1, step = 1, ticks = F)),
                                             column(2, sliderInput(inputId="SVP_2019_g", label = 'Gewichtung Wähleranteil SVP (2019):',
-                                                                  min=0, max=10, value=1, step = 1, ticks = F))),
+                                                                  min=0, max=10, value=1, step = 1, ticks = F)),
+                                            column(2, sliderInput(inputId="Übrige_2019_g", label = 'Gewichtung Wähleranteil Übrige (2019):',
+                                                              min=0, max=10, value=1, step = 1, ticks = F))),
                              ),
                             actionButton("d_berechnen", "Wunschgemeinde Vergleichen", style="color: #fff; background-color: #d73925; border-color: #c34113;
                                 border-radius: 10px; 
@@ -336,7 +338,7 @@ server <- function(input, output, session) {
                               input$ant_aus_2019_g, input$ant_sozhi_2019_g, input$ant_u20_2019_g, input$ant_20bis39_2019_g, input$ant_40bis64_2019_g, 
                               input$ant_ab65_2019_g, input$prok_geb_2019_g, input$prok_hei_2019_g, input$prok_scheid_2019_g, input$prok_tod_2019_g,
                               input$dre_17_g, input$ant_bes1_2018_g, input$ant_bes2_2018_g, input$ant_bes3_2018_g, input$ant_ast1_2018_g, input$ant_ast2_2018_g, input$ant_ast3_2018_g,
-                              input$k_l_P_2019_g, input$GPS_2019_g, input$SP_2019_g, input$k_m_P_2019_g, input$CVP_2019_g, input$BDP_2019_g, input$FDP_2019_g, input$k_r_P_2019_g, input$SVP_2019_g
+                              input$k_l_P_2019_g, input$GPS_2019_g, input$SP_2019_g, input$k_m_P_2019_g, input$CVP_2019_g, input$BDP_2019_g, input$FDP_2019_g, input$k_r_P_2019_g, input$SVP_2019_g, input$Übrige_2019_g
                               )})
     
     observe(print(gewichtung()))
@@ -468,7 +470,7 @@ server <- function(input, output, session) {
                 ant_aus_2019, ant_sozhi_2019, ant_u20_2019, ant_20bis39_2019, ant_40bis64_2019, 
                 ant_ab65_2019, prok_geb_2019, prok_hei_2019, prok_scheid_2019, prok_tod_2019,
                 dre_17, ant_bes1_2018, ant_bes2_2018, ant_bes3_2018, ant_ast1_2018, ant_ast2_2018, ant_ast3_2018,
-                k_l_P_2019, GPS_2019, SP_2019, k_m_P_2019, CVP_2019, BDP_2019, FDP_2019, k_r_P_2019, SVP_2019
+                k_l_P_2019, GPS_2019, SP_2019, k_m_P_2019, CVP_2019, BDP_2019, FDP_2019, k_r_P_2019, SVP_2019, Übrige_2019
        ))
      
      # weight it with the values choosen 
@@ -491,7 +493,7 @@ server <- function(input, output, session) {
                 g_r_d_ant_aus_2019, g_r_d_ant_sozhi_2019, g_r_d_ant_u20_2019, g_r_d_ant_20bis39_2019, g_r_d_ant_40bis64_2019, 
                 g_r_d_ant_ab65_2019, g_r_d_prok_geb_2019, g_r_d_prok_hei_2019, g_r_d_prok_scheid_2019, g_r_d_prok_tod_2019,
                 g_r_d_dre_17, g_r_d_ant_bes1_2018, g_r_d_ant_bes2_2018, g_r_d_ant_bes3_2018, g_r_d_ant_ast1_2018, g_r_d_ant_ast2_2018, g_r_d_ant_ast3_2018,
-                g_r_d_k_l_P_2019, g_r_d_GPS_2019, g_r_d_SP_2019, g_r_d_k_m_P_2019, g_r_d_CVP_2019, g_r_d_BDP_2019, g_r_d_FDP_2019, g_r_d_k_r_P_2019, g_r_d_SVP_2019
+                g_r_d_k_l_P_2019, g_r_d_GPS_2019, g_r_d_SP_2019, g_r_d_k_m_P_2019, g_r_d_CVP_2019, g_r_d_BDP_2019, g_r_d_FDP_2019, g_r_d_k_r_P_2019, g_r_d_SVP_2019, g_r_d_Übrige_2019
        ))
        
      

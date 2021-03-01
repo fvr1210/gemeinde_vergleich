@@ -71,6 +71,34 @@ df_port <- xlsx_cells("raw-data/Gemeindeportrae_ch_2020.xlsx", sheet = "T21.3.1"
 
 # create functions for these datsets
 # for data from 2020
+mergers_2020 <- function(.df){
+  .df %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Obersteckholz" = "Langenthal")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Mötschwil" = "Hindelbank")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Rümligen" = "Riggisberg")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "St. Antoni" = "Tafers", "Alterswil" = "Tafers")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Arconciel" = "Bois-d’Amont", "Ependes (FR)" = "Bois-d’Amont", "Senèdes" = "Bois-d’Amont")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Cheiry" = "Surpierre")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Haldenstein" = "Chur")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Casti-Wergenstein" = "Muntogna da Schons", "Donat" = "Muntogna da Schons", "Lohn (GR)" = "Muntogna da Schons", "Mathon" = "Muntogna da Schons")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Altwis" = "Hitzkirch")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Gettnau" = "Willisau")) %>%        
+    mutate(Gemeinde = recode(Gemeinde, "Corcelles-Cormondrèche" = "Neuchâtel", "Peseux" = "Neuchâtel", "Valangin" = "Neuchâtel")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Gänsbrunnen" = "Welschenrohr-Gänsbrunnen", "Welschenrohr" = "Welschenrohr-Gänsbrunnen")) %>%      
+    mutate(Gemeinde = recode(Gemeinde, "Rohr (SO)" = "Stüsslingen")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Brione (Verzasca)" = "Verzasca", "Corippo" = "Verzasca", "Frasco" = "Verzasca", "Sonogno" = "Verzasca", "Vogorno" = "Verzasca")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Bauen" = "Seedorf (UR)")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Montherod" = "Aubonne")) %>%  
+    mutate(Gemeinde = recode(Gemeinde, "Bagnes" = "Val de Bagnes", "Vollèges" = "Val de Bagnes")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Charrat" = "Martigny")) %>%      
+    mutate(Gemeinde = recode(Gemeinde, "Miège" = "Noble-Contrée", "Venthône" = "Noble-Contrée", "Veyras" = "Noble-Contrée")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Crans-près-Céligny" = "Crans (VD)")) %>%  
+    mutate(Gemeinde = recode(Gemeinde, "Les Brenets" = "Le Locle")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Klosters-Serneus" = "Klosters"))   
+}
+
+
+
 new_data_sets_20 <- function(.file_path,  .var, .original){
   xlsx_cells(.file_path, sheet = "Worksheet") %>% 
     filter(!is_blank) %>% 
