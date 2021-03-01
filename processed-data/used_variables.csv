@@ -1,0 +1,51 @@
+﻿Variable ;Beobachtungsjahr;Abkürzung;Quelle
+Ständige Wohnbevölkerung;2019;stae_wb_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
+Entwicklung ständige Wohnbevölkerung;2010 bis 2019;ent_wb_2010_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
+Bevölkerungsdichte;2019;bev_dichte_2019;BFS – Arealstatistik der Schweiz (AREA), Statistik der Bevölkerung und der Haushalte (STATPOP)
+Gesamtfläche in km2;Zwischen 2004 und 2009;gf_km2_2004_09;BFS – Arealstatistik der Schweiz (AREA)
+Siedlungsfläche in %;Zwischen 2004 und 2009;ant_sf_0409;BFS – Arealstatistik der Schweiz (AREA)
+Landwirtschaftsfläche in %;Zwischen 2004 und 2009;ant_lf_0409;BFS – Arealstatistik der Schweiz (AREA)
+Wald und Gehölze in %;Zwischen 2004 und 2009;ant_wg_0409;BFS – Arealstatistik der Schweiz (AREA)
+unproduktive Fläche in %;Zwischen 2004 und 2009;ant_upf_0409;BFS – Arealstatistik der Schweiz (AREA)
+Leerwohnungsziffer;2020;anteil_lw_2020;BFS – Leerwohnungszählung (LWZ
+Neu gebaute Wohnungen pro 1000 Einwohner;2018;prok_ngw_18;BFS – Bau- und Wohnbaustatistik (B&Wbs)
+Durchschnittliche Haushaltsgrösse;2018;dhhg_2018;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
+Anteil Wohnzonen in Bauzonen in %;2017;ant_Wohnzonen_2017;ARE – Bauzonenstatistik Schweiz
+Anteil Mischzonen in Bauzonen in %;2017;ant_Mischzonen_2017;ARE – Bauzonenstatistik Schweiz
+Anteil Zentrumszonen in Bauzonen in %;2017;ant_Zentrumszonen_2017;ARE – Bauzonenstatistik Schweiz
+Anteil öffentliche Nutzungszonen in Bauzonen in %;2017;ant_öff_Nutzungzonen_2017;ARE – Bauzonenstatistik Schweiz
+Anteil eingeschränkte Bauzonen in %;2017;ant_einge_Bauzonen_2017;ARE – Bauzonenstatistik Schweiz
+Anteil Tourismus und Freizeitzonen in Bauzonen in %;2017;ant_Tourismus_Freizeitzonen_2017_g;ARE – Bauzonenstatistik Schweiz
+Anteil Verkehrszonen innerhalb der Bauzonen in Bauzonen %;2017;ant_Verkehrszone_in_2017;ARE – Bauzonenstatistik Schweiz
+Anteil weitere Bauzonen in Bauzonen in %;2017;ant_weitere_Bauzonen_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in ÖV-Güteklasse A in %;2017;ant_ÖV_GK_A_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in ÖV-Güteklasse B in %;2017;ant_ÖV_GK_B_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in ÖV-Güteklasse C in %;2017;ant_ÖV_GK_C_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in ÖV-Güteklasse D in %;2017;ant_ÖV_GK_D_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in keiner-Güteklasse in %;2017;ant_ÖV_GK_keine_2017;ARE – Bauzonenstatistik Schweiz
+Ständige ausländische Wohnbevölkerung in %;2019;ant_aus_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
+Sozialhilfequote;2019;ant_sozhi_2019;BFS – Sozialhilfeempfängerstatistik (SHS)
+Ständige Wohnbevölkerung unter 20 Jahren in %;2019;ant_u20_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
+00Ständige Wohnbevölkerung im Alter von 20 bis 39 Jahren in %;2019;ant_20bis39_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
+Ständige Wohnbevölkerung im Alter von 40 bis 64 Jahren in %;2019;ant_40bis64_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
+Ständige Wohnbevölkerung im Alter ab 65 Jahren in %;2019;ant_ab65_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
+Lebendgeburten pro 1000 Einwohner;2019;prok_geb_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP), Statistik der natürlichen Bevölkerungsbewegung (BEVNAT)
+Heiraten pro 1000 Einwohner;2019;prok_hei_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP), Statistik der natürlichen Bevölkerungsbewegung (BEVNAT)
+Scheidungen pro 1000 Einwohner;2019;prok_scheid_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP), Statistik der natürlichen Bevölkerungsbewegung (BEVNAT)
+Tote pro 1000 Einwohner;2019;prok_hei_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP), Statistik der natürlichen Bevölkerungsbewegung (BEVNAT)
+Reineinkommen pro Einwohner, in Franken;2017;dre_17;ESTV
+Beschäftigte im 1. Sektor in %;2018;ant_bes1_2018;BFS – Statistik der Unternehmensstruktur (STATENT)
+Beschäftigte im 2. Sektor in %;2018;ant_bes2_2018;BFS – Statistik der Unternehmensstruktur (STATENT)
+Beschäftigte im 3. Sektor in %;2018;ant_bes3_2018;BFS – Statistik der Unternehmensstruktur (STATENT)
+Arbeitsstätten im 1. Sektor in %;2018;ant_ast1_2018;BFS – Statistik der Unternehmensstruktur (STATENT)
+Arbeitsstätten im 2. Sektor in %;2018;ant_ast2_2018;BFS – Statistik der Unternehmensstruktur (STATENT)
+Arbeitsstätten im 3. Sektor in %;2018;ant_ast3_2018;BFS – Statistik der Unternehmensstruktur (STATENT)
+Wähleranteil kleine linke Parteien;2019;k_l_P_2019;BFS – Statistik der Wahlen und Abstimmungen
+Wähleranteil GPS;2019;GPS_2019;BFS – Statistik der Wahlen und Abstimmungen
+Wähleranteil SP;2019;SP_2019;BFS – Statistik der Wahlen und Abstimmungen
+Wähleranteil kleine Mitteparteien;2019;k_m_P_2019;BFS – Statistik der Wahlen und Abstimmungen
+Wähleranteil CVP;2019;CVP_2019;BFS – Statistik der Wahlen und Abstimmungen
+Wähleranteil BDP;2019;BDP_2019;BFS – Statistik der Wahlen und Abstimmungen
+Wähleranteil FDP;2019;FDP_2019;BFS – Statistik der Wahlen und Abstimmungen
+Wähleranteil kleine rechts Parteien;2019;k_r_P_2019;BFS – Statistik der Wahlen und Abstimmungen
+Wähleranteil SVP;2019;SVP_2019;BFS – Statistik der Wahlen und Abstimmungen
