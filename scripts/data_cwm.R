@@ -69,8 +69,7 @@ df_port <- xlsx_cells("raw-data/Gemeindeportrae_ch_2020.xlsx", sheet = "T21.3.1"
 # I will use this newer data and replace the older when available. The problem is that the data for 2019 has 2212 municipalities (as switzerland had in 2019)
 # so adjustments had to be done to get the numbers for the 2172 municipalities which existed in 2021
 
-# create functions for these datsets
-# for data from 2020
+#mergers_2020
 mergers_2020 <- function(.df){
   .df %>% 
     mutate(Gemeinde = recode(Gemeinde, "Obersteckholz" = "Langenthal")) %>% 
@@ -97,7 +96,66 @@ mergers_2020 <- function(.df){
     mutate(Gemeinde = recode(Gemeinde, "Klosters-Serneus" = "Klosters"))   
 }
 
+#mergers_2019
+mergers_2019 <- function(.df){
+  .df %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Schinznach-Bad" = "Brugg")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Kirchenthurnen" = "Thurnen", "Lohnstorf" = "Thurnen", "Mühlethurnen" = "Thurnen")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Wolfisberg" = "Niederbipp")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Schwendibach" = "Steffisburg")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "La Folliaz" = "Villaz", "Villaz-Saint-Pierre" = "Villaz")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Corserey" = "Prez", "Noréaz" = "Prez", "Prez-vers-Noréaz" = "Prez")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Maladers" = "Chur")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Ebersecken" = "Altishofen")) 
+}
 
+#mergers_2018
+mergers_2018 <- function(.df){
+  .df %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Attelwil" = "Reitnau")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Golaten" = "Kallnach")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Hinterrhein" = "Rheinwald", "Nufenen" = "Rheinwald", "Splügen" = "Rheinwald" )) %>%    
+    mutate(Gemeinde = recode(Gemeinde, "Rebeuvelier" = "Courrendlin", "Vellerat" = "Courrendlin")) %>%   
+    mutate(Gemeinde = recode(Gemeinde, "Hütten" = "Wädenswil", "Schönenberg (ZH)" = "Wädenswil")) %>%  
+    mutate(Gemeinde = recode(Gemeinde, "Oberstammheim" = "Stammheim", "Unterstammheim" = "Rheinwald", "Waltalingen" = "Rheinwald")) 
+}
+
+#mergers_2017
+mergers_2017 <- function(.df){
+  .df %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Scherz" = "Lupfig")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Gelterfingen" = "Kirchdorf (BE)", "Mühledorf (BE)" = "Kirchdorf (BE)", "Noflen" = "Kirchdorf (BE)")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Schlosswil" = "Grosshöchstetten")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Mutten" = "Thusis")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Bergün/Bravuogn" = "Bergün Filisur",  "Filisur" =  "Bergün Filisur")) %>%    
+    mutate(Gemeinde = recode(Gemeinde, "Andiast" = "Breil/Brigels", "Waltensburg/Vuorz" = "Breil/Brigels")) %>%   
+    mutate(Gemeinde = recode(Gemeinde, "Corban" = "Val Terbi")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Rocourt" = "Haute-Ajoie")) %>%  
+    mutate(Gemeinde = recode(Gemeinde, "Bevaix" = "La Grande Béroche", "Fresens" = "La Grande Béroche", "Gorgier" = "La Grande Béroche", "Montalchez" = "La Grande Béroche", "Saint-Aubin-Sauges" = "La Grande Béroche", "Vaumarcus" = "La Grande Béroche")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Hirzel" = "Horgen")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Hofstetten (ZH)" = "Elgg")) %>%  
+    mutate(Gemeinde = recode(Gemeinde, "Camorino" = "Bellinzona", "Claro" = "Bellinzona", "Giubiasco" = "Bellinzona", "Gnosca" = "Bellinzona", "Gorduno" = "Bellinzona", "Gudo" = "Bellinzona", "Moleno" = "Bellinzona", "Monte Carasso" = "Bellinzona", "Pianezzo" = "Bellinzona", "Preonzo" = "Bellinzona", "Sant'Antonio" = "Bellinzona", "Sementina" = "Bellinzona")) %>% 
+    mutate(Gemeinde = recode(Gemeinde, "Cresciano" = "Riviera", "Iragna" = "Riviera", "Lodrino" = "Riviera", "Osogna" = "Riviera")) 
+    
+}
+
+# for dataset without merging
+data_sets_wm <- function(.file_path,  .var, .original){
+  xlsx_cells(.file_path, sheet = "Worksheet") %>% 
+    filter(!is_blank) %>% 
+    filter(row>2) %>%
+    behead("up", .var) %>% 
+    behead("left", BfS_id) %>% 
+    behead("left", Gemeinde) %>% 
+    select(c(Gemeinde, BfS_id, .var, numeric)) %>% 
+    pivot_wider(names_from = c(.var), values_from = numeric) %>% 
+    rename(Anzahl = .original) %>%    
+    filter(Gemeinde!="Schweiz") %>% 
+    group_by(Gemeinde)
+}
+
+
+#•dataset from 2020
 
 new_data_sets_20 <- function(.file_path,  .var, .original){
   xlsx_cells(.file_path, sheet = "Worksheet") %>% 
@@ -108,60 +166,12 @@ new_data_sets_20 <- function(.file_path,  .var, .original){
     behead("left", Gemeinde) %>% 
     select(c(Gemeinde, BfS_id, .var, numeric)) %>% 
     pivot_wider(names_from = c(.var), values_from = numeric) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Obersteckholz" = "Langenthal")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Mötschwil" = "Hindelbank")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Rümligen" = "Riggisberg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "St. Antoni" = "Tafers", "Alterswil" = "Tafers")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Arconciel" = "Bois-d’Amont", "Ependes (FR)" = "Bois-d’Amont", "Senèdes" = "Bois-d’Amont")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Cheiry" = "Surpierre")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Haldenstein" = "Chur")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Casti-Wergenstein" = "Muntogna da Schons", "Donat" = "Muntogna da Schons", "Lohn (GR)" = "Muntogna da Schons", "Mathon" = "Muntogna da Schons")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Altwis" = "Hitzkirch")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gettnau" = "Willisau")) %>%        
-    mutate(Gemeinde = recode(Gemeinde, "Corcelles-Cormondrèche" = "Neuchâtel", "Peseux" = "Neuchâtel", "Valangin" = "Neuchâtel")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gänsbrunnen" = "Welschenrohr-Gänsbrunnen", "Welschenrohr" = "Welschenrohr-Gänsbrunnen")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Rohr (SO)" = "Stüsslingen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Brione (Verzasca)" = "Verzasca", "Corippo" = "Verzasca", "Frasco" = "Verzasca", "Sonogno" = "Verzasca", "Vogorno" = "Verzasca")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Bauen" = "Seedorf (UR)")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Montherod" = "Aubonne")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Bagnes" = "Val de Bagnes", "Vollèges" = "Val de Bagnes")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Charrat" = "Martigny")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Miège" = "Noble-Contrée", "Venthône" = "Noble-Contrée", "Veyras" = "Noble-Contrée")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Crans-près-Céligny" = "Crans (VD)")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Les Brenets" = "Le Locle")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Klosters-Serneus" = "Klosters")) %>%      
-    rename(Anzahl = .original) %>%    
+    mergers_2020 %>%     
+    rename(Anzahl = all_of(.original)) %>%    
     filter(Gemeinde!="Schweiz") %>% 
     group_by(Gemeinde)
 }
 
-
-#only mergers of 2020
-mergers_2020 <- function(.df){
-    .df %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Obersteckholz" = "Langenthal")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Mötschwil" = "Hindelbank")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Rümligen" = "Riggisberg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "St. Antoni" = "Tafers", "Alterswil" = "Tafers")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Arconciel" = "Bois-d’Amont", "Ependes (FR)" = "Bois-d’Amont", "Senèdes" = "Bois-d’Amont")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Cheiry" = "Surpierre")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Haldenstein" = "Chur")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Casti-Wergenstein" = "Muntogna da Schons", "Donat" = "Muntogna da Schons", "Lohn (GR)" = "Muntogna da Schons", "Mathon" = "Muntogna da Schons")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Altwis" = "Hitzkirch")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gettnau" = "Willisau")) %>%        
-    mutate(Gemeinde = recode(Gemeinde, "Corcelles-Cormondrèche" = "Neuchâtel", "Peseux" = "Neuchâtel", "Valangin" = "Neuchâtel")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gänsbrunnen" = "Welschenrohr-Gänsbrunnen", "Welschenrohr" = "Welschenrohr-Gänsbrunnen")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Rohr (SO)" = "Stüsslingen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Brione (Verzasca)" = "Verzasca", "Corippo" = "Verzasca", "Frasco" = "Verzasca", "Sonogno" = "Verzasca", "Vogorno" = "Verzasca")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Bauen" = "Seedorf (UR)")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Montherod" = "Aubonne")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Bagnes" = "Val de Bagnes", "Vollèges" = "Val de Bagnes")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Charrat" = "Martigny")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Miège" = "Noble-Contrée", "Venthône" = "Noble-Contrée", "Veyras" = "Noble-Contrée")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Crans-près-Céligny" = "Crans (VD)")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Les Brenets" = "Le Locle")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Klosters-Serneus" = "Klosters"))     
-}
 
 
 
@@ -175,37 +185,9 @@ new_data_sets_19 <- function(.file_path,  .var, .original){
     behead("left", Gemeinde) %>% 
     select(c(Gemeinde, BfS_id, .var, numeric)) %>% 
     pivot_wider(names_from = c(.var), values_from = numeric) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Obersteckholz" = "Langenthal")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Mötschwil" = "Hindelbank")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Rümligen" = "Riggisberg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "St. Antoni" = "Tafers", "Alterswil" = "Tafers")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Arconciel" = "Bois-d’Amont", "Ependes (FR)" = "Bois-d’Amont", "Senèdes" = "Bois-d’Amont")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Cheiry" = "Surpierre")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Haldenstein" = "Chur")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Casti-Wergenstein" = "Muntogna da Schons", "Donat" = "Muntogna da Schons", "Lohn (GR)" = "Muntogna da Schons", "Mathon" = "Muntogna da Schons")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Altwis" = "Hitzkirch")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gettnau" = "Willisau")) %>%        
-    mutate(Gemeinde = recode(Gemeinde, "Corcelles-Cormondrèche" = "Neuchâtel", "Peseux" = "Neuchâtel", "Valangin" = "Neuchâtel")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gänsbrunnen" = "Welschenrohr-Gänsbrunnen", "Welschenrohr" = "Welschenrohr-Gänsbrunnen")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Rohr (SO)" = "Stüsslingen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Brione (Verzasca)" = "Verzasca", "Corippo" = "Verzasca", "Frasco" = "Verzasca", "Sonogno" = "Verzasca", "Vogorno" = "Verzasca")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Bauen" = "Seedorf (UR)")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Montherod" = "Aubonne")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Bagnes" = "Val de Bagnes", "Vollèges" = "Val de Bagnes")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Charrat" = "Martigny")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Miège" = "Noble-Contrée", "Venthône" = "Noble-Contrée", "Veyras" = "Noble-Contrée")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Crans-près-Céligny" = "Crans (VD)")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Les Brenets" = "Le Locle")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Klosters-Serneus" = "Klosters")) %>%   
-    mutate(Gemeinde = recode(Gemeinde, "Schinznach-Bad" = "Brugg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Kirchenthurnen" = "Thurnen", "Lohnstorf" = "Thurnen", "Mühlethurnen" = "Thurnen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Wolfisberg" = "Niederbipp")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Schwendibach" = "Steffisburg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "La Folliaz" = "Villaz", "Villaz-Saint-Pierre" = "Villaz")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Corserey" = "Prez", "Noréaz" = "Prez", "Prez-vers-Noréaz" = "Prez")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Maladers" = "Chur")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Ebersecken" = "Altishofen")) %>% 
-    rename(Anzahl = .original) %>% 
+    mergers_2019 %>% 
+    mergers_2020 %>%    
+    rename(Anzahl = all_of(.original)) %>%    
     filter(Gemeinde!="Schweiz") %>% 
     group_by(Gemeinde)
 }
@@ -221,47 +203,15 @@ new_data_sets_18 <- function(.file_path,  .var, .original){
     behead("left", BfS_id) %>% 
     behead("left", Gemeinde) %>% 
     select(c(Gemeinde, BfS_id, .var, numeric)) %>% 
-    pivot_wider(names_from = c(.var), values_from = numeric)  %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Obersteckholz" = "Langenthal")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Mötschwil" = "Hindelbank")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Rümligen" = "Riggisberg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "St. Antoni" = "Tafers", "Alterswil" = "Tafers")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Arconciel" = "Bois-d’Amont", "Ependes (FR)" = "Bois-d’Amont", "Senèdes" = "Bois-d’Amont")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Cheiry" = "Surpierre")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Haldenstein" = "Chur")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Casti-Wergenstein" = "Muntogna da Schons", "Donat" = "Muntogna da Schons", "Lohn (GR)" = "Muntogna da Schons", "Mathon" = "Muntogna da Schons")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Altwis" = "Hitzkirch")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gettnau" = "Willisau")) %>%        
-    mutate(Gemeinde = recode(Gemeinde, "Corcelles-Cormondrèche" = "Neuchâtel", "Peseux" = "Neuchâtel", "Valangin" = "Neuchâtel")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gänsbrunnen" = "Welschenrohr-Gänsbrunnen", "Welschenrohr" = "Welschenrohr-Gänsbrunnen")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Rohr (SO)" = "Stüsslingen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Brione (Verzasca)" = "Verzasca", "Corippo" = "Verzasca", "Frasco" = "Verzasca", "Sonogno" = "Verzasca", "Vogorno" = "Verzasca")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Bauen" = "Seedorf (UR)")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Montherod" = "Aubonne")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Bagnes" = "Val de Bagnes", "Vollèges" = "Val de Bagnes")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Charrat" = "Martigny")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Miège" = "Noble-Contrée", "Venthône" = "Noble-Contrée", "Veyras" = "Noble-Contrée")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Crans-près-Céligny" = "Crans (VD)")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Les Brenets" = "Le Locle")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Klosters-Serneus" = "Klosters")) %>%   
-    mutate(Gemeinde = recode(Gemeinde, "Schinznach-Bad" = "Brugg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Kirchenthurnen" = "Thurnen", "Lohnstorf" = "Thurnen", "Mühlethurnen" = "Thurnen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Wolfisberg" = "Niederbipp")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Schwendibach" = "Steffisburg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "La Folliaz" = "Villaz", "Villaz-Saint-Pierre" = "Villaz")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Corserey" = "Prez", "Noréaz" = "Prez", "Prez-vers-Noréaz" = "Prez")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Maladers" = "Chur")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Ebersecken" = "Altishofen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Attelwil" = "Reitnau")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Golaten" = "Kallnach")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Hinterrhein" = "Rheinwald", "Nufenen" = "Rheinwald", "Splügen" = "Rheinwald" )) %>%    
-    mutate(Gemeinde = recode(Gemeinde, "Rebeuvelier" = "Courrendlin", "Vellerat" = "Courrendlin")) %>%   
-    mutate(Gemeinde = recode(Gemeinde, "Hütten" = "Wädenswil", "Schönenberg (ZH)" = "Wädenswil")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Oberstammheim" = "Stammheim", "Unterstammheim" = "Rheinwald", "Waltalingen" = "Rheinwald")) %>% 
-    rename(Anzahl = .original) %>% 
+    pivot_wider(names_from = c(.var), values_from = numeric) %>% 
+    mergers_2018 %>% 
+    mergers_2019 %>% 
+    mergers_2020 %>%
+    rename(Anzahl = all_of(.original)) %>%    
     filter(Gemeinde!="Schweiz") %>% 
     group_by(Gemeinde)
 }
+
 
 
 #for data from 2017
@@ -273,57 +223,12 @@ new_data_sets_17 <- function(.file_path,  .var, .original){
     behead("left", BfS_id) %>% 
     behead("left", Gemeinde) %>% 
     select(c(Gemeinde, BfS_id, .var, numeric)) %>% 
-    pivot_wider(names_from = c(.var), values_from = numeric)  %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Obersteckholz" = "Langenthal")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Mötschwil" = "Hindelbank")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Rümligen" = "Riggisberg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "St. Antoni" = "Tafers", "Alterswil" = "Tafers")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Arconciel" = "Bois-d’Amont", "Ependes (FR)" = "Bois-d’Amont", "Senèdes" = "Bois-d’Amont")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Cheiry" = "Surpierre")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Haldenstein" = "Chur")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Casti-Wergenstein" = "Muntogna da Schons", "Donat" = "Muntogna da Schons", "Lohn (GR)" = "Muntogna da Schons", "Mathon" = "Muntogna da Schons")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Altwis" = "Hitzkirch")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gettnau" = "Willisau")) %>%        
-    mutate(Gemeinde = recode(Gemeinde, "Corcelles-Cormondrèche" = "Neuchâtel", "Peseux" = "Neuchâtel", "Valangin" = "Neuchâtel")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gänsbrunnen" = "Welschenrohr-Gänsbrunnen", "Welschenrohr" = "Welschenrohr-Gänsbrunnen")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Rohr (SO)" = "Stüsslingen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Brione (Verzasca)" = "Verzasca", "Corippo" = "Verzasca", "Frasco" = "Verzasca", "Sonogno" = "Verzasca", "Vogorno" = "Verzasca")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Bauen" = "Seedorf (UR)")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Montherod" = "Aubonne")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Bagnes" = "Val de Bagnes", "Vollèges" = "Val de Bagnes")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Charrat" = "Martigny")) %>%      
-    mutate(Gemeinde = recode(Gemeinde, "Miège" = "Noble-Contrée", "Venthône" = "Noble-Contrée", "Veyras" = "Noble-Contrée")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Crans-près-Céligny" = "Crans (VD)")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Les Brenets" = "Le Locle")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Klosters-Serneus" = "Klosters")) %>%   
-    mutate(Gemeinde = recode(Gemeinde, "Schinznach-Bad" = "Brugg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Kirchenthurnen" = "Thurnen", "Lohnstorf" = "Thurnen", "Mühlethurnen" = "Thurnen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Wolfisberg" = "Niederbipp")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Schwendibach" = "Steffisburg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "La Folliaz" = "Villaz", "Villaz-Saint-Pierre" = "Villaz")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Corserey" = "Prez", "Noréaz" = "Prez", "Prez-vers-Noréaz" = "Prez")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Maladers" = "Chur")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Ebersecken" = "Altishofen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Attelwil" = "Reitnau")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Golaten" = "Kallnach")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Hinterrhein" = "Rheinwald", "Nufenen" = "Rheinwald", "Splügen" = "Rheinwald" )) %>%    
-    mutate(Gemeinde = recode(Gemeinde, "Rebeuvelier" = "Courrendlin", "Vellerat" = "Courrendlin")) %>%   
-    mutate(Gemeinde = recode(Gemeinde, "Hütten" = "Wädenswil", "Schönenberg (ZH)" = "Wädenswil")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Oberstammheim" = "Stammheim", "Unterstammheim" = "Rheinwald", "Waltalingen" = "Rheinwald")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Scherz" = "Lupfig")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gelterfingen" = "Kirchdorf (BE)", "Mühledorf (BE)" = "Kirchdorf (BE)", "Noflen" = "Kirchdorf (BE)")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Schlosswil" = "Grosshöchstetten")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Mutten" = "Thusis")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Bergün/Bravuogn" = "Bergün Filisur",  "Filisur" =  "Bergün Filisur")) %>%    
-    mutate(Gemeinde = recode(Gemeinde, "Andiast" = "Breil/Brigels", "Waltensburg/Vuorz" = "Breil/Brigels")) %>%   
-    mutate(Gemeinde = recode(Gemeinde, "Corban" = "Val Terbi")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Rocourt" = "Haute-Ajoie")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Bevaix" = "La Grande Béroche", "Fresens" = "La Grande Béroche", "Gorgier" = "La Grande Béroche", "Montalchez" = "La Grande Béroche", "Saint-Aubin-Sauges" = "La Grande Béroche", "Vaumarcus" = "La Grande Béroche")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Hirzel" = "Horgen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Hofstetten (ZH)" = "Elgg")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Camorino" = "Bellinzona", "Claro" = "Bellinzona", "Giubiasco" = "Bellinzona", "Gnosca" = "Bellinzona", "Gorduno" = "Bellinzona", "Gudo" = "Bellinzona", "Moleno" = "Bellinzona", "Monte Carasso" = "Bellinzona", "Pianezzo" = "Bellinzona", "Preonzo" = "Bellinzona", "Sant'Antonio" = "Bellinzona", "Sementina" = "Bellinzona")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Cresciano" = "Riviera", "Iragna" = "Riviera", "Lodrino" = "Riviera", "Osogna" = "Riviera")) %>% 
-    rename(Anzahl = .original) %>% 
+    pivot_wider(names_from = c(.var), values_from = numeric) %>% 
+    mergers_2017 %>% 
+    mergers_2018 %>% 
+    mergers_2019 %>% 
+    mergers_2020 %>%
+    rename(Anzahl = all_of(.original)) %>%    
     filter(Gemeinde!="Schweiz") %>% 
     group_by(Gemeinde)
 }
@@ -478,8 +383,8 @@ df_ast3_18<- new_data_sets_18("raw-data/arbeitsst_3sektor_18.xlsx", ast3_18,  "Z
 
 # 2019 municipalities id without mergers
 df_name_id <- # for data where mergers are not wanted 
-    df_port %>% 
-      select(c(Gemeinde, BfS_id))
+  data_sets_wm("raw-data/durch_haushaltsgroesse_19.xlsx", dhhg_19,  "Durchschnittliche Haushaltsgrösse*, in Personen") %>% 
+  select(-c("Anzahl"))
 
 # ratio for the merged municipalities
 df_m_ratio <- df_bev_19_old %>% 
@@ -496,43 +401,14 @@ df_wahlen_19 <- read.csv2("raw-data/wahlen_2019.csv") %>%
   filter(!grepl(">>", Gemeinde)) %>% 
   mutate("Gemeinde"= substring(Gemeinde, 7)) %>% 
   left_join(df_name_id) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Obersteckholz" = "Langenthal")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Mötschwil" = "Hindelbank")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Rümligen" = "Riggisberg")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "St. Antoni" = "Tafers", "Alterswil" = "Tafers")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Arconciel" = "Bois-d’Amont", "Ependes (FR)" = "Bois-d’Amont", "Senèdes" = "Bois-d’Amont")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Cheiry" = "Surpierre")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Haldenstein" = "Chur")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Casti-Wergenstein" = "Muntogna da Schons", "Donat" = "Muntogna da Schons", "Lohn (GR)" = "Muntogna da Schons", "Mathon" = "Muntogna da Schons")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Altwis" = "Hitzkirch")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Gettnau" = "Willisau")) %>%        
-  mutate(Gemeinde = recode(Gemeinde, "Corcelles-Cormondrèche" = "Neuchâtel", "Peseux" = "Neuchâtel", "Valangin" = "Neuchâtel")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Gänsbrunnen" = "Welschenrohr-Gänsbrunnen", "Welschenrohr" = "Welschenrohr-Gänsbrunnen")) %>%      
-  mutate(Gemeinde = recode(Gemeinde, "Rohr (SO)" = "Stüsslingen")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Brione (Verzasca)" = "Verzasca", "Corippo" = "Verzasca", "Frasco" = "Verzasca", "Sonogno" = "Verzasca", "Vogorno" = "Verzasca")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Bauen" = "Seedorf (UR)")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Montherod" = "Aubonne")) %>%  
-  mutate(Gemeinde = recode(Gemeinde, "Bagnes" = "Val de Bagnes", "Vollèges" = "Val de Bagnes")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Charrat" = "Martigny")) %>%      
-  mutate(Gemeinde = recode(Gemeinde, "Miège" = "Noble-Contrée", "Venthône" = "Noble-Contrée", "Veyras" = "Noble-Contrée")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Crans-près-Céligny" = "Crans (VD)")) %>%  
-  mutate(Gemeinde = recode(Gemeinde, "Les Brenets" = "Le Locle")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Klosters-Serneus" = "Klosters")) %>%  
-  mutate(Gemeinde = recode(Gemeinde, "Schinznach-Bad" = "Brugg")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Kirchenthurnen" = "Thurnen", "Lohnstorf" = "Thurnen", "Mühlethurnen" = "Thurnen")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Wolfisberg" = "Niederbipp")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Schwendibach" = "Steffisburg")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "La Folliaz" = "Villaz", "Villaz-Saint-Pierre" = "Villaz")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Corserey" = "Prez", "Noréaz" = "Prez", "Prez-vers-Noréaz" = "Prez")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Maladers" = "Chur")) %>% 
-  mutate(Gemeinde = recode(Gemeinde, "Ebersecken" = "Altishofen")) %>% 
+  mergers_2019 %>% 
+  mergers_2020 %>% 
   left_join(df_m_ratio)  %>% 
   mutate(Parteinsärke_2 = ratio*Parteistärke) %>% 
   group_by(Gemeinde, Partei) %>% 
   summarise(sum = sum(Parteinsärke_2)) %>% 
   pivot_wider(names_from = c(Partei), values_from = sum) %>% 
   ungroup() %>% 
-  na.omit() %>% 
   # merging parties together after this list http://www.politik-stat.ch/2015pa_de.html
   mutate(FDP = FDP + LPS) %>% 
   mutate("k_m_P" = LdU + EVP + CSP) %>% 
@@ -542,7 +418,8 @@ df_wahlen_19 <- read.csv2("raw-data/wahlen_2019.csv") %>%
   mutate(
     across(c("BDP":"k_r_P"), .names = "{col}_2019")
   ) %>% 
-  select(-c("BDP":"k_r_P"))
+  select(-c("BDP":"k_r_P")) %>% 
+  na.omit() 
   
   
 # there are some municipalities where we have no results for the elections 2019 https://www.bfs.admin.ch/bfs/de/home/statistiken/regionalstatistik/regionale-portraets-kennzahlen/gemeinden/daten-erlaeuterungen.html
@@ -602,9 +479,8 @@ df_wahlen_19[df_wahlen_19$Gemeinde=="Clavaleyres", 2:12] <- df_wahlen_19%>% filt
 df_wahlen_19[df_wahlen_19$Gemeinde=="Niedermuhlern", 2:12] <- df_wahlen_19%>% filter(Gemeinde=="Wald (BE)") %>% 
   select(c(2:12))
 
-# removing the values from the portrait otherwise the join is very complicated
-df_port <- df_port %>% 
-  select(-c(`FDP 4)_2019`:`Kleine Rechtsparteien_2019`))
+df_wahlen_19 <- df_wahlen_19 %>% 
+  rename("Uebrige_2019" = "Übrige_2019")
 
 
 # # construction zones ----
@@ -614,33 +490,10 @@ df_port <- df_port %>%
 zonen_17 <- function(.file_path,  .sheet){
   readxl::read_xlsx(.file_path, sheet = .sheet) %>% 
     rename("Gemeinde" = "Name") %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Schinznach-Bad" = "Brugg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Kirchenthurnen" = "Thurnen", "Lohnstorf" = "Thurnen", "Mühlethurnen" = "Thurnen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Wolfisberg" = "Niederbipp")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Schwendibach" = "Steffisburg")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "La Folliaz" = "Villaz", "Villaz-Saint-Pierre" = "Villaz")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Corserey" = "Prez", "Noréaz" = "Prez", "Prez-vers-Noréaz" = "Prez")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Maladers" = "Chur")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Ebersecken" = "Altishofen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Attelwil" = "Reitnau")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Golaten" = "Kallnach")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Hinterrhein" = "Rheinwald", "Nufenen" = "Rheinwald", "Splügen" = "Rheinwald" )) %>%    
-    mutate(Gemeinde = recode(Gemeinde, "Rebeuvelier" = "Courrendlin", "Vellerat" = "Courrendlin")) %>%   
-    mutate(Gemeinde = recode(Gemeinde, "Hütten" = "Wädenswil", "Schönenberg (ZH)" = "Wädenswil")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Oberstammheim" = "Stammheim", "Unterstammheim" = "Rheinwald", "Waltalingen" = "Rheinwald")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Scherz" = "Lupfig")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Gelterfingen" = "Kirchdorf (BE)", "Mühledorf (BE)" = "Kirchdorf (BE)", "Noflen" = "Kirchdorf (BE)")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Schlosswil" = "Grosshöchstetten")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Mutten" = "Thusis")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Bergün/Bravuogn" = "Bergün Filisur",  "Filisur" =  "Bergün Filisur")) %>%    
-    mutate(Gemeinde = recode(Gemeinde, "Andiast" = "Breil/Brigels", "Waltensburg/Vuorz" = "Breil/Brigels")) %>%   
-    mutate(Gemeinde = recode(Gemeinde, "Corban" = "Val Terbi")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Rocourt" = "Haute-Ajoie")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Bevaix" = "La Grande Béroche", "Fresens" = "La Grande Béroche", "Gorgier" = "La Grande Béroche", "Montalchez" = "La Grande Béroche", "Saint-Aubin-Sauges" = "La Grande Béroche", "Vaumarcus" = "La Grande Béroche")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Hirzel" = "Horgen")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Hofstetten (ZH)" = "Elgg")) %>%  
-    mutate(Gemeinde = recode(Gemeinde, "Camorino" = "Bellinzona", "Claro" = "Bellinzona", "Giubiasco" = "Bellinzona", "Gnosca" = "Bellinzona", "Gorduno" = "Bellinzona", "Gudo" = "Bellinzona", "Moleno" = "Bellinzona", "Monte Carasso" = "Bellinzona", "Pianezzo" = "Bellinzona", "Preonzo" = "Bellinzona", "Sant'Antonio" = "Bellinzona", "Sementina" = "Bellinzona")) %>% 
-    mutate(Gemeinde = recode(Gemeinde, "Cresciano" = "Riviera", "Iragna" = "Riviera", "Lodrino" = "Riviera", "Osogna" = "Riviera")) %>% 
+    mergers_2017 %>% 
+    mergers_2018 %>% 
+    mergers_2019 %>% 
+    mergers_2020 %>%
     mutate_if(is.numeric, ~replace(., is.na(.), 0))
 }
 
@@ -648,7 +501,7 @@ zonen_17 <- function(.file_path,  .sheet){
 
 df_bz_17 <- zonen_17("raw-data/Bauzonenstatistik_17.xlsx", "Statistik Hauptnutzung") %>%
   rename(c("Wohnzonen" = "HN_11", "Arbeitszonen" = "HN_12", "Mischzonen" = "HN_13", "Zentrumszonen" = "HN_14", 
-           "öff_Nutzungszonen" = "HN_15", "einge_Bauzonen" = "HN_16", "Tourismus_Freizeitzonen" = "HN_17",
+           "oeff_Nutzungszonen" = "HN_15", "einge_Bauzonen" = "HN_16", "Tourismus_Freizeitzonen" = "HN_17",
            "Verkehrszone_in" = "HN_18", "weitere_Bauzonen" = "HN_19")) %>%  # replace code with name from legend in the same file 
   group_by(Gemeinde) %>% 
   summarise_at(vars("Wohnzonen":"Total"), sum) %>% 
@@ -659,14 +512,14 @@ df_bz_17 <- zonen_17("raw-data/Bauzonenstatistik_17.xlsx", "Statistik Hauptnutzu
 
 
 # public transport conection                                                           
-df_ov_17 <- zonen_17("raw-data/Bauzonenstatistik_17.xlsx", "Analyse Erschliessung ÖV") %>% 
-  rename(c("ÖV_GK_A" = "A", "ÖV_GK_B" = "B", "ÖV_GK_C" = "C", "ÖV_GK_D" = "D", 
-           "ÖV_GK_keine" = "keine")) %>%
+df_OV_17 <- zonen_17("raw-data/Bauzonenstatistik_17.xlsx", "Analyse Erschliessung ÖV") %>% 
+  rename(c("OV_GK_A" = "A", "OV_GK_B" = "B", "OV_GK_C" = "C", "OV_GK_D" = "D", 
+           "OV_GK_keine" = "keine")) %>%
   group_by(Gemeinde) %>% 
-  summarise_at(vars("ÖV_GK_A":"Total"), sum) %>% 
+  summarise_at(vars("OV_GK_A":"Total"), sum) %>% 
   ungroup() %>% 
   mutate(
-    across(c("ÖV_GK_A":"ÖV_GK_keine"), ~ . / Total*100, .names = "ant_{col}_2017")
+    across(c("OV_GK_A":"OV_GK_keine"), ~ . / Total*100, .names = "ant_{col}_2017")
   ) 
 
 
@@ -776,7 +629,7 @@ df_port_new <- df_bev_19 %>%
   left_join(df_ast3_18) %>% 
   left_join(df_wahlen_19) %>% 
   left_join(df_bz_17) %>% 
-  left_join(df_ov_17, by="Gemeinde") %>% 
+  left_join(df_OV_17, by="Gemeinde") %>% 
   left_join(df_kantone_20) %>% 
   mutate_if(is.numeric, ~replace(., is.na(.), 0))
 
@@ -806,12 +659,12 @@ df_port_new  <- df_port_new %>%
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>% 
   select(c(Gemeinde, Kanton, BfS_id, stae_wb_2019, ent_wb_2010_2019, bev_dichte_2019, 
   gf_km2_0409, ant_sf_0409, ant_lf_0409, ant_wg_0409, ant_upf_0409,
-  ant_Wohnzonen_2017, ant_Mischzonen_2017, ant_Zentrumszonen_2017, ant_öff_Nutzungszonen_2017, ant_einge_Bauzonen_2017, ant_Tourismus_Freizeitzonen_2017, ant_Verkehrszone_in_2017, ant_weitere_Bauzonen_2017,
-  ant_ÖV_GK_A_2017, ant_ÖV_GK_B_2017, ant_ÖV_GK_C_2017, ant_ÖV_GK_D_2017, ant_ÖV_GK_keine_2017,
+  ant_Wohnzonen_2017, ant_Mischzonen_2017, ant_Zentrumszonen_2017, ant_oeff_Nutzungszonen_2017, ant_einge_Bauzonen_2017, ant_Tourismus_Freizeitzonen_2017, ant_Verkehrszone_in_2017, ant_weitere_Bauzonen_2017,
+  ant_OV_GK_A_2017, ant_OV_GK_B_2017, ant_OV_GK_C_2017, ant_OV_GK_D_2017, ant_OV_GK_keine_2017,
   anteil_lw_2020, prok_ngw_2018, dhhg_2019, 
   ant_aus_2019, ant_sozhi_2019, ant_u20_2019, ant_20bis39_2019, ant_40bis64_2019, ant_ab65_2019, prok_geb_2019, prok_hei_2019, prok_scheid_2019, prok_tod_2019,
   dre_17, ant_bes1_2018, ant_bes2_2018, ant_bes3_2018, ant_ast1_2018, ant_ast2_2018, ant_ast3_2018,
-  k_l_P_2019, GPS_2019, SP_2019, k_m_P_2019, CVP_2019, BDP_2019, FDP_2019, k_r_P_2019, SVP_2019, Übrige_2019)) %>% 
+  k_l_P_2019, GPS_2019, SP_2019, k_m_P_2019, CVP_2019, BDP_2019, FDP_2019, k_r_P_2019, SVP_2019, Uebrige_2019)) %>% 
   mutate_if(is.numeric, round, 2)
 
 
@@ -822,6 +675,6 @@ df_port_new  <- df_port_new %>%
 
 
  
-write.csv2(df_port_new, "processed-data/Gemeindeportrae_ch_2020_update.csv", row.names = F)
+write_csv2(df_port_new, "processed-data/Gemeindeportrae_ch_2020_update.csv")
 
 
