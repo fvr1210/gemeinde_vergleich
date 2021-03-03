@@ -664,7 +664,7 @@ df_port_new  <- df_port_new %>%
   anteil_lw_2020, prok_ngw_2018, dhhg_2019, 
   ant_aus_2019, ant_sozhi_2019, ant_u20_2019, ant_20bis39_2019, ant_40bis64_2019, ant_ab65_2019, prok_geb_2019, prok_hei_2019, prok_scheid_2019, prok_tod_2019,
   dre_17, ant_bes1_2018, ant_bes2_2018, ant_bes3_2018, ant_ast1_2018, ant_ast2_2018, ant_ast3_2018,
-  k_l_P_2019, GPS_2019, SP_2019, k_m_P_2019, CVP_2019, BDP_2019, FDP_2019, k_r_P_2019, SVP_2019, Uebrige_2019)) %>% 
+  k_l_P_2019, GPS_2019, SP_2019, k_m_P_2019, GLP_2019, CVP_2019, BDP_2019, FDP_2019, k_r_P_2019, SVP_2019, Uebrige_2019)) %>% 
   mutate_if(is.numeric, round, 2)
 
 

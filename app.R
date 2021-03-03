@@ -247,6 +247,8 @@ ui <- dashboardPage(skin = "red",
                                                           min=0, max=10, value=1, step = 1, ticks = F)),
                                     column(3, sliderInput(inputId="k_m_P_2019_g", label = 'Gewichtung Wähleranteil kleine Mitteparteien (2019):',
                                                           min=0, max=10, value=1, step = 1, ticks = F)),
+                                    column(3, sliderInput(inputId="GLP_2019_g", label = 'Gewichtung Wähleranteil GLP (2019):',
+                                                          min=0, max=10, value=1, step = 1, ticks = F)),
                                     column(3, sliderInput(inputId="CVP_2019_g", label = 'Gewichtung Wähleranteil CVP (2019):',
                                                           min=0, max=10, value=1, step = 1, ticks = F)),
                                     column(3, sliderInput(inputId="BDP_2019_g", label = 'Gewichtung Wähleranteil BDP (2019):',
@@ -345,7 +347,7 @@ server <- function(input, output, session) {
                             input$ant_aus_2019_g, input$ant_sozhi_2019_g, input$ant_u20_2019_g, input$ant_20bis39_2019_g, input$ant_40bis64_2019_g, 
                             input$ant_ab65_2019_g, input$prok_geb_2019_g, input$prok_hei_2019_g, input$prok_scheid_2019_g, input$prok_tod_2019_g,
                             input$dre_17_g, input$ant_bes1_2018_g, input$ant_bes2_2018_g, input$ant_bes3_2018_g, input$ant_ast1_2018_g, input$ant_ast2_2018_g, input$ant_ast3_2018_g,
-                            input$k_l_P_2019_g, input$GPS_2019_g, input$SP_2019_g, input$k_m_P_2019_g, input$CVP_2019_g, input$BDP_2019_g, input$FDP_2019_g, input$k_r_P_2019_g, input$SVP_2019_g, input$Uebrige_2019_g
+                            input$k_l_P_2019_g, input$GPS_2019_g, input$SP_2019_g, input$k_m_P_2019_g, input$GLP_2019_g, input$CVP_2019_g, input$BDP_2019_g, input$FDP_2019_g, input$k_r_P_2019_g, input$SVP_2019_g, input$Uebrige_2019_g
   )})
   
   observe(print(gewichtung()))
@@ -475,7 +477,7 @@ server <- function(input, output, session) {
                ant_aus_2019, ant_sozhi_2019, ant_u20_2019, ant_20bis39_2019, ant_40bis64_2019, 
                ant_ab65_2019, prok_geb_2019, prok_hei_2019, prok_scheid_2019, prok_tod_2019,
                dre_17, ant_bes1_2018, ant_bes2_2018, ant_bes3_2018, ant_ast1_2018, ant_ast2_2018, ant_ast3_2018,
-               k_l_P_2019, GPS_2019, SP_2019, k_m_P_2019, CVP_2019, BDP_2019, FDP_2019, k_r_P_2019, SVP_2019, Uebrige_2019
+               k_l_P_2019, GPS_2019, SP_2019, k_m_P_2019, GLP_2019, CVP_2019, BDP_2019, FDP_2019, k_r_P_2019, SVP_2019, Uebrige_2019
       ))
     
     # weight it with the values choosen 
@@ -498,7 +500,7 @@ server <- function(input, output, session) {
                g_rd_ant_aus_2019, g_rd_ant_sozhi_2019, g_rd_ant_u20_2019, g_rd_ant_20bis39_2019, g_rd_ant_40bis64_2019, 
                g_rd_ant_ab65_2019, g_rd_prok_geb_2019, g_rd_prok_hei_2019, g_rd_prok_scheid_2019, g_rd_prok_tod_2019,
                g_rd_dre_17, g_rd_ant_bes1_2018, g_rd_ant_bes2_2018, g_rd_ant_bes3_2018, g_rd_ant_ast1_2018, g_rd_ant_ast2_2018, g_rd_ant_ast3_2018,
-               g_rd_k_l_P_2019, g_rd_GPS_2019, g_rd_SP_2019, g_rd_k_m_P_2019, g_rd_CVP_2019, g_rd_BDP_2019, g_rd_FDP_2019, g_rd_k_r_P_2019, g_rd_SVP_2019, g_rd_Uebrige_2019
+               g_rd_k_l_P_2019, g_rd_GPS_2019, g_rd_SP_2019, g_rd_k_m_P_2019, g_rd_GLP_2019, g_rd_CVP_2019, g_rd_BDP_2019, g_rd_FDP_2019, g_rd_k_r_P_2019, g_rd_SVP_2019, g_rd_Uebrige_2019
       ))
     
     
