@@ -269,7 +269,8 @@ ui <- dashboardPage(skin = "red",
                                   # br(),
                                   # dataTableOutput("wei_stand_dis_table"),
                                   br(),
-                                  dataTableOutput("wei_rank_dis_table")
+                                  dataTableOutput("wei_rank_diff_table"),
+                                  htmlOutput("g_rd_text")
                                 ),
                         )),
                     ))
@@ -440,7 +441,7 @@ server <- function(input, output, session) {
   #    observe(print(df_distance()))
   #    
   #* calculate distance with ranks-----
-  df_rank_dis <- eventReactive(input$d_berechnen, {
+  df_rank_differenz <- eventReactive(input$d_berechnen, {
     
     # select name and number of municipalities for later  
     namen_nummer <- df_gv %>% 
@@ -462,10 +463,10 @@ server <- function(input, output, session) {
       select(-c("Gemeinde", "BfS_id", "Kanton")) 
     
     # calculate rank distance 
-    rank_dist <- mapply(function(x, y) x-y, df_agr, df_gr)
+    rank_diff <- mapply(function(x, y) x-y, df_agr, df_gr)
     
     # creat data frame and use same order as above
-    df_rank_dist <- as.data.frame(rank_dist) %>% 
+    df_rank_diff <- as.data.frame(rank_diff) %>% 
       select(c(stae_wb_2019, ent_wb_2010_2019, bev_dichte_2019, 
                gf_km2_0409, ant_sf_0409, ant_lf_0409, ant_wg_0409, ant_upf_0409, 
                anteil_lw_2020, prok_ngw_2018, dhhg_2019,
@@ -478,30 +479,30 @@ server <- function(input, output, session) {
       ))
     
     # weight it with the values choosen 
-    weighted_rank_dist <- mapply(function(x, y) x*y, df_rank_dist, gewichtung())
+    weighted_rank_diff <- mapply(function(x, y) x*y, df_rank_diff, gewichtung())
     
     # calculate the total weighted rank distance
-    df_weighted_rank_dist <- as.data.frame(weighted_rank_dist) %>% 
+    df_weighted_rank_diff <- as.data.frame(weighted_rank_diff) %>% 
       rowwise() %>% 
-      mutate(across(c(1:ncol(rank_dist)), .names = "g_r_d_{col}")) %>% 
-      select(-c(1:ncol(rank_dist))) 
+      mutate(across(c(1:ncol(rank_diff)), .names = "g_rd_{col}")) %>% 
+      select(-c(1:ncol(rank_diff))) 
     
-    df_weighted_rank_dist <-  df_weighted_rank_dist %>% 
-      mutate(gewichtete_absolute_Rangdifferenz = sum(abs(c_across(1:ncol(df_weighted_rank_dist))))) %>% 
+    df_weighted_rank_diff <-  df_weighted_rank_diff %>% 
+      mutate(gewichtete_absolute_Rangdifferenz = sum(abs(c_across(1:ncol(df_weighted_rank_diff))))) %>% 
       #select variables with the same order as above
-      select(c(gewichtete_absolute_Rangdifferenz, g_r_d_stae_wb_2019, g_r_d_ent_wb_2010_2019, g_r_d_bev_dichte_2019, 
-               g_r_d_gf_km2_0409, g_r_d_ant_sf_0409, g_r_d_ant_lf_0409, g_r_d_ant_wg_0409, g_r_d_ant_upf_0409, 
-               g_r_d_anteil_lw_2020, g_r_d_prok_ngw_2018, g_r_d_dhhg_2019,
-               g_r_d_ant_Wohnzonen_2017, g_r_d_ant_Mischzonen_2017, g_r_d_ant_Zentrumszonen_2017, g_r_d_ant_oeff_Nutzungszonen_2017, g_r_d_ant_einge_Bauzonen_2017, g_r_d_ant_Tourismus_Freizeitzonen_2017, g_r_d_ant_Verkehrszone_in_2017, g_r_d_ant_weitere_Bauzonen_2017,
-               g_r_d_ant_OV_GK_A_2017, g_r_d_ant_OV_GK_B_2017, g_r_d_ant_OV_GK_C_2017, g_r_d_ant_OV_GK_D_2017, g_r_d_ant_OV_GK_keine_2017,
-               g_r_d_ant_aus_2019, g_r_d_ant_sozhi_2019, g_r_d_ant_u20_2019, g_r_d_ant_20bis39_2019, g_r_d_ant_40bis64_2019, 
-               g_r_d_ant_ab65_2019, g_r_d_prok_geb_2019, g_r_d_prok_hei_2019, g_r_d_prok_scheid_2019, g_r_d_prok_tod_2019,
-               g_r_d_dre_17, g_r_d_ant_bes1_2018, g_r_d_ant_bes2_2018, g_r_d_ant_bes3_2018, g_r_d_ant_ast1_2018, g_r_d_ant_ast2_2018, g_r_d_ant_ast3_2018,
-               g_r_d_k_l_P_2019, g_r_d_GPS_2019, g_r_d_SP_2019, g_r_d_k_m_P_2019, g_r_d_CVP_2019, g_r_d_BDP_2019, g_r_d_FDP_2019, g_r_d_k_r_P_2019, g_r_d_SVP_2019, g_r_d_Uebrige_2019
+      select(c(gewichtete_absolute_Rangdifferenz, g_rd_stae_wb_2019, g_rd_ent_wb_2010_2019, g_rd_bev_dichte_2019, 
+               g_rd_gf_km2_0409, g_rd_ant_sf_0409, g_rd_ant_lf_0409, g_rd_ant_wg_0409, g_rd_ant_upf_0409, 
+               g_rd_anteil_lw_2020, g_rd_prok_ngw_2018, g_rd_dhhg_2019,
+               g_rd_ant_Wohnzonen_2017, g_rd_ant_Mischzonen_2017, g_rd_ant_Zentrumszonen_2017, g_rd_ant_oeff_Nutzungszonen_2017, g_rd_ant_einge_Bauzonen_2017, g_rd_ant_Tourismus_Freizeitzonen_2017, g_rd_ant_Verkehrszone_in_2017, g_rd_ant_weitere_Bauzonen_2017,
+               g_rd_ant_OV_GK_A_2017, g_rd_ant_OV_GK_B_2017, g_rd_ant_OV_GK_C_2017, g_rd_ant_OV_GK_D_2017, g_rd_ant_OV_GK_keine_2017,
+               g_rd_ant_aus_2019, g_rd_ant_sozhi_2019, g_rd_ant_u20_2019, g_rd_ant_20bis39_2019, g_rd_ant_40bis64_2019, 
+               g_rd_ant_ab65_2019, g_rd_prok_geb_2019, g_rd_prok_hei_2019, g_rd_prok_scheid_2019, g_rd_prok_tod_2019,
+               g_rd_dre_17, g_rd_ant_bes1_2018, g_rd_ant_bes2_2018, g_rd_ant_bes3_2018, g_rd_ant_ast1_2018, g_rd_ant_ast2_2018, g_rd_ant_ast3_2018,
+               g_rd_k_l_P_2019, g_rd_GPS_2019, g_rd_SP_2019, g_rd_k_m_P_2019, g_rd_CVP_2019, g_rd_BDP_2019, g_rd_FDP_2019, g_rd_k_r_P_2019, g_rd_SVP_2019, g_rd_Uebrige_2019
       ))
     
     
-    df_weighted_distance_names <- cbind(namen_nummer, df_weighted_rank_dist)%>% 
+    df_weighted_diff_names <- cbind(namen_nummer, df_weighted_rank_diff)%>% 
       arrange(by = gewichtete_absolute_Rangdifferenz) %>% 
       filter (Kanton %in% input$kantone)
     
@@ -509,15 +510,19 @@ server <- function(input, output, session) {
     
   }) 
   
-  output$wei_rank_dis_table <- renderDataTable({DT::datatable(df_rank_dis(), filter = "top", extensions = c('Buttons', 'Scroller'), 
+  output$wei_rank_diff_table <- renderDataTable({DT::datatable(df_rank_differenz(), filter = "top", extensions = c('Buttons', 'Scroller'), 
                                                               options = list(scrollY = 650,
                                                                              scrollX = 500,
                                                                              deferRender = TRUE,
                                                                              scroller = TRUE))})
+
   
-  observe(print(df_rank_dis()))
   
+  output$g_rd_text <- eventReactive(input$d_berechnen, {
+    text <-  "<h5>Die Abkürzung g_rd_ vor den Variablen steht für «gewichtete Rangdifferenz»</h5>"
+  })
   
+ 
 }
 
 

@@ -13,16 +13,16 @@ Durchschnittliche Haushaltsgrösse;2018;dhhg_2018;BFS – Statistik der Bevölke
 Anteil Wohnzonen in Bauzonen in %;2017;ant_Wohnzonen_2017;ARE – Bauzonenstatistik Schweiz
 Anteil Mischzonen in Bauzonen in %;2017;ant_Mischzonen_2017;ARE – Bauzonenstatistik Schweiz
 Anteil Zentrumszonen in Bauzonen in %;2017;ant_Zentrumszonen_2017;ARE – Bauzonenstatistik Schweiz
-Anteil öffentliche Nutzungszonen in Bauzonen in %;2017;ant_öff_Nutzungzonen_2017;ARE – Bauzonenstatistik Schweiz
+Anteil öffentliche Nutzungszonen in Bauzonen in %;2017;ant_oeff_Nutzungzonen_2017;ARE – Bauzonenstatistik Schweiz
 Anteil eingeschränkte Bauzonen in %;2017;ant_einge_Bauzonen_2017;ARE – Bauzonenstatistik Schweiz
 Anteil Tourismus und Freizeitzonen in Bauzonen in %;2017;ant_Tourismus_Freizeitzonen_2017_g;ARE – Bauzonenstatistik Schweiz
 Anteil Verkehrszonen innerhalb der Bauzonen in Bauzonen %;2017;ant_Verkehrszone_in_2017;ARE – Bauzonenstatistik Schweiz
 Anteil weitere Bauzonen in Bauzonen in %;2017;ant_weitere_Bauzonen_2017;ARE – Bauzonenstatistik Schweiz
-Bauzonenfläche in ÖV-Güteklasse A in %;2017;ant_ÖV_GK_A_2017;ARE – Bauzonenstatistik Schweiz
-Bauzonenfläche in ÖV-Güteklasse B in %;2017;ant_ÖV_GK_B_2017;ARE – Bauzonenstatistik Schweiz
-Bauzonenfläche in ÖV-Güteklasse C in %;2017;ant_ÖV_GK_C_2017;ARE – Bauzonenstatistik Schweiz
-Bauzonenfläche in ÖV-Güteklasse D in %;2017;ant_ÖV_GK_D_2017;ARE – Bauzonenstatistik Schweiz
-Bauzonenfläche in keiner-Güteklasse in %;2017;ant_ÖV_GK_keine_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in ÖV-Güteklasse A in %;2017;ant_OV_GK_A_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in ÖV-Güteklasse B in %;2017;ant_OV_GK_B_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in ÖV-Güteklasse C in %;2017;ant_OV_GK_C_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in ÖV-Güteklasse D in %;2017;ant_OV_GK_D_2017;ARE – Bauzonenstatistik Schweiz
+Bauzonenfläche in keiner-Güteklasse in %;2017;ant_OV_GK_keine_2017;ARE – Bauzonenstatistik Schweiz
 Ständige ausländische Wohnbevölkerung in %;2019;ant_aus_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
 Sozialhilfequote;2019;ant_sozhi_2019;BFS – Sozialhilfeempfängerstatistik (SHS)
 Ständige Wohnbevölkerung unter 20 Jahren in %;2019;ant_u20_2019;BFS – Statistik der Bevölkerung und der Haushalte (STATPOP)
@@ -49,3 +49,4 @@ Wähleranteil BDP;2019;BDP_2019;BFS – Statistik der Wahlen und Abstimmungen
 Wähleranteil FDP;2019;FDP_2019;BFS – Statistik der Wahlen und Abstimmungen
 Wähleranteil kleine rechts Parteien;2019;k_r_P_2019;BFS – Statistik der Wahlen und Abstimmungen
 Wähleranteil SVP;2019;SVP_2019;BFS – Statistik der Wahlen und Abstimmungen
+Wähleranteil Übrige;2019;Uebrige_2019;BFS – Statistik der Wahlen und Abstimmungen
