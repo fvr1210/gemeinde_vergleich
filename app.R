@@ -450,7 +450,7 @@ server <- function(input, output, session) {
     
     # calculate ranks over all municipalities
     df_gv_rank <- df_gv  %>%
-      mutate_if(is.numeric, ~(-rank(.,  ties.method = c("min"))))
+      mutate_if(is.numeric, ~(-rank(.,  ties.method = c("max"))))
     
     # choose selected municipality, and unselect municipality name, bfs id and canton
     df_gr <- df_gv_rank %>%  
@@ -463,7 +463,7 @@ server <- function(input, output, session) {
       select(-c("Gemeinde", "BfS_id", "Kanton")) 
     
     # calculate rank distance 
-    rank_diff <- mapply(function(x, y) x-y, df_agr, df_gr)
+    rank_diff <- mapply(function(x, y) y-x, df_gr, df_agr)
     
     # creat data frame and use same order as above
     df_rank_diff <- as.data.frame(rank_diff) %>% 
