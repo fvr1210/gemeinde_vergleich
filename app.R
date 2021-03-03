@@ -448,7 +448,7 @@ server <- function(input, output, session) {
       filter(Gemeinde != input$gemeinde) %>% 
       select(c("Gemeinde", "BfS_id", "Kanton"))  
     
-    # calculate ranks over all municipalities
+    # calculate ranks over all municipalities, here I have to use max (can't really say why)
     df_gv_rank <- df_gv  %>%
       mutate_if(is.numeric, ~(-rank(.,  ties.method = c("max"))))
     
@@ -463,7 +463,7 @@ server <- function(input, output, session) {
       select(-c("Gemeinde", "BfS_id", "Kanton")) 
     
     # calculate rank distance 
-    rank_diff <- mapply(function(x, y) y-x, df_gr, df_agr)
+    rank_diff <- mapply(function(x, y) x-y, df_agr, df_gr)
     
     # creat data frame and use same order as above
     df_rank_diff <- as.data.frame(rank_diff) %>% 
